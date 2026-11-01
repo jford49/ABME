@@ -17,6 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--first', type=str, required=True)
 parser.add_argument('--second', type=str, required=True)
 parser.add_argument('--output', type=str, required=True)
+parser.add_argument('--ckpts', type=str, required=True)
 args = parser.parse_args()
 
 args.DDP = False
@@ -25,9 +26,13 @@ SBMNet = SBMENet()
 ABMNet = ABMRNet()
 SynNet = SynthesisNet(args)
 
-SBMNet.load_state_dict(torch.load('Best/SBME_ckpt.pth', map_location='cpu'))
-ABMNet.load_state_dict(torch.load('Best/ABMR_ckpt.pth', map_location='cpu'))
-SynNet.load_state_dict(torch.load('Best/SynNet_ckpt.pth', map_location='cpu'))
+ckpt_path = args.ckpts
+pth_file = path.join(ckpt_path, 'Best/SBME_ckpt.pth')
+SBMNet.load_state_dict(torch.load(pth_file, map_location='cpu'))
+pth_file = path.join(ckpt_path, 'Best/ABMR_ckpt.pth')
+ABMNet.load_state_dict(torch.load(pth_file, map_location='cpu'))
+pth_file = path.join(ckpt_path, 'Best/SynNet_ckpt.pth')
+SynNet.load_state_dict(torch.load(pth_file, map_location='cpu'))
 
 for param in SBMNet.parameters():
     param.requires_grad = False 
