@@ -1,3 +1,34 @@
+import os
+import sys
+from torch.utils.cpp_extension import load
+
+# 1. Get the absolute path to the 'correlation_package' directory
+# This ensures it works flawlessly inside Jupyter/Colab regardless of your current working directory
+current_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else os.getcwd()
+
+# If correlation.py is inside a subfolder, we make sure we target the correct paths
+# (Adjust the joins below if your folders have different exact names)
+
+cuda_source_path = os.path.join(current_dir, '..', 'correlation_cuda_folder', 'correlation_cuda.cc') 
+
+# Note: If they are simply sibling files/folders, make sure the path points exactly to the .cc file.
+
+# 2. Compile and load the CUDA extension at runtime
+# This will take a few moments on the first execution, then use a cached build on subsequent runs.
+try:
+    correlation_cuda = load(
+        name="correlation_cuda",
+        sources=[cuda_source_path, os.path.join(current_dir, '..', 'folder', 'correlation_cuda_kernel.cu')],
+        verbose=True
+    )
+    print("CUDA Extension compiled and loaded successfully!")
+except Exception as e:
+    print(f"Failed to compile CUDA extension. Error: {e}")
+    print("Ensure a CUDA-capable GPU runtime is active in your notebook.")
+
+# 3. You can now use the compiled functions directly from the object
+# Example: output = correlation_cuda.forward(input1, input2)
+
 import torch
 from torch.nn.modules.module import Module
 from torch.autograd import Function
