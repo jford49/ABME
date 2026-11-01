@@ -2,6 +2,9 @@ import torch
 from torch.nn.modules.module import Module
 from torch.autograd import Function
 import correlation_cuda
+import os
+
+print("corrrelation_package", os.getcwd())
 
 class CorrelationFunction(Function):
 
