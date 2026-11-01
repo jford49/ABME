@@ -27,6 +27,7 @@ ABMNet = ABMRNet()
 SynNet = SynthesisNet(args)
 
 from os import path
+print("run.py", os.getcwd())
 ckpt_path = args.ckpts
 pth_file = path.join(ckpt_path, 'Best/SBME_ckpt.pth')
 SBMNet.load_state_dict(torch.load(pth_file, map_location='cpu'))
