@@ -18,7 +18,7 @@ cuda_source_path = os.path.join(current_dir, '..', 'correlation_package', 'corre
 # 2. Compile and load the CUDA extension at runtime
 # This will take a few moments on the first execution, then use a cached build on subsequent runs.
 try:
-    correlation_cuda = load(
+    compiled_module = load(
         name="correlation_cuda",
         sources=[cuda_source_path, os.path.join(current_dir, '..', 'correlation_package', 'correlation_cuda_kernel.cu')],
         verbose=True
@@ -27,6 +27,8 @@ try:
 except Exception as e:
     print(f"Failed to compile CUDA extension. Error: {e}")
     print("Ensure a CUDA-capable GPU runtime is active in your notebook.")
+    
+sys.modules['correlation_cuda'] = compiled_module
 
 # 3. You can now use the compiled functions directly from the object
 # Example: output = correlation_cuda.forward(input1, input2)
