@@ -6,10 +6,12 @@ from torch.utils.cpp_extension import load
 # This ensures it works flawlessly inside Jupyter/Colab regardless of your current working directory
 current_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else os.getcwd()
 
+print("corrrelation_package compile CUDA", current_dir)
+
 # If correlation.py is inside a subfolder, we make sure we target the correct paths
 # (Adjust the joins below if your folders have different exact names)
 
-cuda_source_path = os.path.join(current_dir, '..', 'correlation_cuda_folder', 'correlation_cuda.cc') 
+cuda_source_path = os.path.join(current_dir, '..', 'correlation_package', 'correlation_cuda.cc') 
 
 # Note: If they are simply sibling files/folders, make sure the path points exactly to the .cc file.
 
@@ -18,7 +20,7 @@ cuda_source_path = os.path.join(current_dir, '..', 'correlation_cuda_folder', 'c
 try:
     correlation_cuda = load(
         name="correlation_cuda",
-        sources=[cuda_source_path, os.path.join(current_dir, '..', 'folder', 'correlation_cuda_kernel.cu')],
+        sources=[cuda_source_path, os.path.join(current_dir, '..', 'correlation_package', 'correlation_cuda_kernel.cu')],
         verbose=True
     )
     print("CUDA Extension compiled and loaded successfully!")
@@ -34,8 +36,6 @@ from torch.nn.modules.module import Module
 from torch.autograd import Function
 import correlation_cuda
 import os
-
-print("corrrelation_package", os.getcwd())
 
 class CorrelationFunction(Function):
 
